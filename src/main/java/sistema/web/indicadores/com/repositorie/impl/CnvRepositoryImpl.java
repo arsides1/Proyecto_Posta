@@ -1,6 +1,7 @@
 package sistema.web.indicadores.com.repositorie.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,8 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CnvRepositorImpl implements CnvRepository {
+@Slf4j
+public class CnvRepositoryImpl implements CnvRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -53,5 +55,17 @@ public class CnvRepositorImpl implements CnvRepository {
                     ps.setString(3, registro.getDurEmbParto());
                 }
         );
+    }
+
+    @Override
+    public void deleteAll() {
+        try {
+            jdbcTemplate.update("DELETE FROM tbl_cnv");
+            log.info("Se eliminaron todos los registros de tbl_cnv");
+        } catch (Exception e) {
+            log.error("Error al eliminar registros de tbl_cnv: {}", e.getMessage());
+            throw new RuntimeException("Error al eliminar registros de CNV", e);
+        }
+
     }
 }
